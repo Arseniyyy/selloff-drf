@@ -1,11 +1,16 @@
 import os
 from pathlib import Path
 
-from selloff_drf.config import (DJANGO_SECRET, DEBUG)
+from selloff_drf.config import (DJANGO_SECRET,
+                                DEBUG,
+                                STRIPE_PUB_KEY,
+                                STRIPE_SECRET_KEY)
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = DJANGO_SECRET
+STRIPE_PUB_KEY = STRIPE_PUB_KEY
+STRIPE_SECRET_KEY = STRIPE_SECRET_KEY
 DEBUG = DEBUG
 ALLOWED_HOSTS = []
 
@@ -18,14 +23,18 @@ DJANGO_APPS = [
     'django.contrib.staticfiles'
 ]
 PROJECT_APPS = [
-    'v1.products'
+    'v1.products',
+    'v1.orders'
 ]
 THIRD_PARTY_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_auth',
     'corsheaders',
     'djoser',
-    'whitenoise'
+    'whitenoise',
+    'django_cleanup.apps.CleanupConfig',
+    'django_rename_app'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
@@ -138,3 +147,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser'
+    ]
+}
